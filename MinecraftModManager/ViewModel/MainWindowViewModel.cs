@@ -1,4 +1,5 @@
 ﻿using MinecraftModManager.Model;
+using MinecraftModManager.Properties;
 using MinecraftModManager.Util;
 using System;
 using System.Collections.Generic;
@@ -25,12 +26,18 @@ namespace MinecraftModManager.ViewModel
         }
 
         public void LoadModList()
-        {
-            string selectedPath = FileSystemUtil.SelectDirectory("mods폴더 지정");
-            if (selectedPath == null)
-                return;
+        { 
+            string modsPath = Settings.Default.ModsDirectory;
+            if (!Directory.Exists(modsPath))
+            {
+                modsPath = FileSystemUtil.SelectDirectory("mods폴더 지정");
+                if (modsPath == null)
+                    return;
+                Settings.Default.ModsDirectory = modsPath;
+                Settings.Default.Save();
+            }
             Mods.Clear();
-            AddModsFromDirectory(selectedPath);
+            AddModsFromDirectory(modsPath);
         }
 
         private void AddModsFromDirectory(string dirPath)
