@@ -8,5 +8,5 @@
 
     <SolidColorBrush x:Key="CardColor" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="BackgroundColor" Color="#eeeeee"/>
-    <SolidColorBrush x:Key="BorderColor" Color="#dfdfdf"/>
+    <SolidColorBrush x:Key="BorderColor" Color="#909090"/>
 </ResourceDictionary>

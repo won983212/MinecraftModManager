@@ -1,4 +1,4 @@
-﻿<Window x:Class="MinecraftModManager.Windows.MainWindow"
+﻿<Window x:Class="MinecraftModManager.View.Windows.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -18,17 +18,19 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" Margin="0,0,8,0" Padding="4,8"
-                     BorderThickness="1" BorderBrush="{StaticResource TextColor}"
-                     md:HintAssist.Hint="검색..." VerticalAlignment="Center"/>
+            <TextBox x:Name="SearchTbx" 
+                     Grid.Column="0" Margin="0,0,8,0" Padding="4,8"
+                     BorderThickness="1" BorderBrush="{StaticResource BorderColor}"
+                     md:HintAssist.Hint="검색..." VerticalAlignment="Center"
+                     TextChanged="SearchBox_TextChanged"/>
             <Button Grid.Column="1" Margin="0,0,8,0"
-                    Command="{Binding ModsRefreshCommand}"
-                    md:ButtonAssist.CornerRadius="0" FontSize="9pt">리스트 업데이트</Button>
+                    Command="{Binding ModsRefreshCommand}">리스트 업데이트</Button>
             <Button Grid.Column="2"
-                    md:ButtonAssist.CornerRadius="0" FontSize="9pt">모드 업데이트 확인</Button>
+                    Command="{Binding ModsUpdateCommand}">모드 업데이트 확인</Button>
         </Grid>
         <Grid Margin="8">
-            <ListBox ItemsSource="{Binding Mods}">
+            <ListBox x:Name="ModListbox" 
+                     ItemsSource="{Binding Mods}" IsEnabled="{Binding IsLoadingModList, Converter={StaticResource InvertBooleanConverter}}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>

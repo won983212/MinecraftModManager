@@ -3,8 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:converter="clr-namespace:MinecraftModManager.Converter"
+             xmlns:vm="clr-namespace:MinecraftModManager.ViewModel"
+             xmlns:view="clr-namespace:MinecraftModManager.View"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             StartupUri="Windows/MainWindow.xaml">
+             StartupUri="View/Windows/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -23,6 +25,11 @@
             <!-- Values -->
             <system:Boolean x:Key="TrueValue">True</system:Boolean>
             <system:Boolean x:Key="FalseValue">False</system:Boolean>
+            
+            <!-- Viewmodel templates -->
+            <DataTemplate DataType="{x:Type vm:ModUpdateViewModel}">
+                <view:ModUpdateView />
+            </DataTemplate>
 
             <!-- Styles -->
             <Style TargetType="{x:Type ToolTip}">
@@ -40,6 +47,11 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
+            </Style>
+
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                <Setter Property="md:ButtonAssist.CornerRadius" Value="0"/>
+                <Setter Property="FontSize" Value="9pt"/>
             </Style>
 
             <Style x:Key="DefaultWindowStyle" TargetType="{x:Type Window}">

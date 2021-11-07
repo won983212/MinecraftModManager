@@ -1,0 +1,72 @@
+﻿<UserControl x:Class="MinecraftModManager.View.ModUpdateView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MinecraftModManager.View"
+             mc:Ignorable="d" 
+             FontFamily="{StaticResource PrimaryFont}"
+             Foreground="{StaticResource TextColor}"
+             MinWidth="800" MinHeight="450">
+    <Grid>
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Bottom"
+                        Orientation="Horizontal" HorizontalAlignment="Right" Margin="8,0,8,8">
+                <Button Margin="0,0,8,0" Command="{Binding ListUpdateCommand}">다시 불러오기</Button>
+                <Button Command="{Binding UpgradeModCommand}">업그레이드</Button>
+            </StackPanel>
+            <Border BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Margin="8">
+                <DataGrid ItemsSource="{Binding ModVersionInfos}" AutoGenerateColumns="False" CanUserAddRows="False">
+                    <DataGrid.Columns>
+                        <DataGridCheckBoxColumn Header="업그레이드" Binding="{Binding IsUpgrade}" />
+                        <DataGridTextColumn Header="모드 이름" Binding="{Binding ModName}" IsReadOnly="True" />
+                        <DataGridTextColumn Header="설치된 버전" Binding="{Binding ModVersion}" IsReadOnly="True" />
+                        <DataGridTextColumn Header="최신 버전 파일" Binding="{Binding LatestVersion}" IsReadOnly="True" />
+                        <DataGridTemplateColumn IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <TextBlock Visibility="{Binding CurseForgeURL, Converter={StaticResource NullToVisibilityConverter}}">
+                                        <Hyperlink NavigateUri="https://www.naver.com/"
+                                                   RequestNavigate="CurseForgeLink_RequestNavigate">
+                                            Link
+                                        </Hyperlink>
+                                        </TextBlock>
+                                        <TextBlock Foreground="Red"
+                                               ToolTip="{Binding LoadError}"
+                                               Visibility="{Binding CurseForgeURL, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter={StaticResource TrueValue}}">
+                                        로드 실패
+                                        </TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </DockPanel>
+        <Grid Visibility="{Binding LoadingStatus, Converter={StaticResource NullToVisibilityConverter}}" d:IsHidden="true">
+            <Rectangle Fill="{StaticResource CardColor}" />
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <ProgressBar Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                             Style="{StaticResource MaterialDesignCircularProgressBar}"
+                             Width="32" Height="32" Margin="0,0,16,0"
+                             Value="0" IsIndeterminate="True"/>
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                           Margin="0,0,0,8" FontSize="12pt"
+                           Foreground="{StaticResource HeaderTextColor}"
+                           Text="최신 버전 정보를 불러오고 있습니다.." />
+                <TextBlock Grid.Column="1" Grid.Row="1"
+                           Text="{Binding LoadingStatus}" />
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

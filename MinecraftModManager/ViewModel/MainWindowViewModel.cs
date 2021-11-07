@@ -1,32 +1,38 @@
 ﻿using MinecraftModManager.Model;
+using MinecraftModManager.Mods;
 using MinecraftModManager.Properties;
 using MinecraftModManager.Util;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 
 namespace MinecraftModManager.ViewModel
 {
     internal class MainWindowViewModel : BaseViewModel
     {
-        public ObservableCollection<Mod> Mods { get; private set; } = new ObservableCollection<Mod>();
-        public ICommand ModsRefreshCommand => new RelayCommand(LoadModList);
+        public ObservableCollection<Mod> Mods { get; } = new ObservableCollection<Mod>();
+        public ICommand ModsRefreshCommand => new RelayCommand(() => LoadModListAsync());
+        public ICommand ModsUpdateCommand => new RelayCommand(() => ViewUtil.ShowWindow(new ModUpdateViewModel(Mods)));
+
+        private bool _isLoadingModList = false;
+        public bool IsLoadingModList
+        {
+            get => _isLoadingModList;
+            set => SetPropertyAndNotify(ref _isLoadingModList, value);
+        }
 
         public MainWindowViewModel()
         {
-            // TODO Async 모델로 바꿔야 할듯?
-            LoadModList();
+            LoadModListAsync();
         }
 
-        public void LoadModList()
-        { 
+        public async Task LoadModListAsync()
+        {
+            if (IsLoadingModList)
+                return;
+            IsLoadingModList = true;
             string modsPath = Settings.Default.ModsDirectory;
             if (!Directory.Exists(modsPath))
             {
@@ -36,12 +42,21 @@ namespace MinecraftModManager.ViewModel
                 Settings.Default.ModsDirectory = modsPath;
                 Settings.Default.Save();
             }
-            Mods.Clear();
-            AddModsFromDirectory(modsPath);
+            List<Mod> mods = await Task.Run(() => GetModsInfoFromDirectory(modsPath));
+            SetToModsList(mods);
+            IsLoadingModList = false;
         }
 
-        private void AddModsFromDirectory(string dirPath)
+        private void SetToModsList(IEnumerable<Mod> mods)
         {
+            Mods.Clear();
+            foreach (Mod mod in mods)
+                Mods.Add(mod);
+        }
+
+        private List<Mod> GetModsInfoFromDirectory(string dirPath)
+        {
+            List<Mod> mods = new List<Mod>();
             ModJarInfoReader infoReader = new ModJarInfoReader();
             foreach (string file in Directory.EnumerateFiles(dirPath))
             {
@@ -49,8 +64,9 @@ namespace MinecraftModManager.ViewModel
                     continue;
                 Mod mod = infoReader.ParseModFromJar(file);
                 if (mod != null)
-                    Mods.Add(mod);
+                    mods.Add(mod);
             }
+            return mods;
         }
     }
 }

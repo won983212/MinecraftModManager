@@ -34,5 +34,17 @@ namespace MinecraftModManager.Properties {
                 this["ModsDirectory"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ProjectIDMap {
+            get {
+                return ((string)(this["ProjectIDMap"]));
+            }
+            set {
+                this["ProjectIDMap"] = value;
+            }
+        }
     }
 }

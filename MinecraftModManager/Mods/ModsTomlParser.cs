@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MinecraftModManager.Util
+namespace MinecraftModManager.Mods
 {
     public class ModsTomlParser
     {
@@ -116,7 +112,7 @@ namespace MinecraftModManager.Util
         private static string EliminateColorCode(string value)
         {
             int idx;
-            while((idx = value.IndexOf('§')) != -1)
+            while ((idx = value.IndexOf('§')) != -1)
                 value = value.Remove(idx, 2);
             return value;
         }

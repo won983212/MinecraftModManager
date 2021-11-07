@@ -1,14 +1,10 @@
 ﻿using MinecraftModManager.Model;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace MinecraftModManager.Util
+namespace MinecraftModManager.Mods
 {
     public class ModJarInfoReader
     {
@@ -30,6 +26,7 @@ namespace MinecraftModManager.Util
                 {
                     StreamReader streamReader = new StreamReader(stream);
                     result = ParseModFromTomlStream(streamReader);
+                    result.FilePath = filePath;
                 }
                 FillVersionAndThumbnail(result);
             }
