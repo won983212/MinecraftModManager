@@ -9,6 +9,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace MinecraftModManager.ViewModel
@@ -16,12 +17,11 @@ namespace MinecraftModManager.ViewModel
     internal class MainWindowViewModel : BaseViewModel
     {
         public ObservableCollection<Mod> Mods { get; private set; } = new ObservableCollection<Mod>();
+        public ICommand ModsRefreshCommand => new RelayCommand(LoadModList);
 
         public MainWindowViewModel()
         {
-            Mods.Add(new Mod() { Name = "Pehkui", Description = "Allows resizing of most entities.", Version = "2.2.1+1.16.5-forge" });
-            Mods.Add(new Mod() { Name = "Macaw's Doors", Description = "Adds a lot of new Doors! With vanila and unique styles.", Version = "1.0.3" });
-            Mods.Add(new Mod() { Name = "AutoRegLib", Description = "Automatically item, block, and model registration for mods.", Version = "1.6-49" });
+            // TODO Async 모델로 바꿔야 할듯?
             LoadModList();
         }
 

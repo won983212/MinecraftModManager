@@ -55,10 +55,7 @@ namespace MinecraftModManager.Util
                 prettyLine = EliminateColorCode(prettyLine);
                 properties[continuedStringPropertyName] += prettyLine;
                 if (ContainsMultiLineEnd(line))
-                {
-                    Logger.Info("Continued: " + properties[continuedStringPropertyName]);
                     continuedStringPropertyName = null;
-                }
                 return true;
             }
             return false;

@@ -11,6 +11,7 @@
                 <md:BundledTheme BaseTheme="Light" PrimaryColor="Indigo" SecondaryColor="DeepOrange" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="Theme/Theme.Light.xaml" />
+                <ResourceDictionary Source="Theme/Theme.Scrollbar.xaml" />
             </ResourceDictionary.MergedDictionaries>
             
             <!-- Fonts -->
