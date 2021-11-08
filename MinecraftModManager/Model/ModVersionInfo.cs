@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MinecraftModManager.Model
 {
-    public class ModVersionInfo
+    public class ModVersionInfo : INotifyPropertyChanged
     {
         public bool IsUpgrade { get; set; } = false;
 
@@ -23,5 +25,29 @@ namespace MinecraftModManager.Model
         public string LoadError { get; set; }
 
         public string LatestVersion { get; set; }
+
+
+        public void CopyCurseForgeDataFrom(ModVersionInfo src)
+        {
+            CurseForgeID = src.CurseForgeID;
+            CurseForgeFileID = src.CurseForgeFileID;
+            CurseForgeURL = src.CurseForgeURL;
+            LoadError = src.LoadError;
+            LatestVersion = src.LatestVersion;
+
+            OnPropertyChanged(nameof(CurseForgeID));
+            OnPropertyChanged(nameof(CurseForgeFileID));
+            OnPropertyChanged(nameof(CurseForgeURL));
+            OnPropertyChanged(nameof(LoadError));
+            OnPropertyChanged(nameof(LatestVersion));
+        }
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

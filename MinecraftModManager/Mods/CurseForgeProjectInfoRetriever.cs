@@ -22,10 +22,12 @@ namespace MinecraftModManager.Mods
                 LoadProjectIdMap();
             if (_projectIdMap.TryGetValue(modName, out int id))
                 url = GetModInfoURLFromID(id);
-            return await GetJsonFromWeb(url);
+            string json = await GetJsonFromWeb(url);
+            // string json = await GetJsonFromFile(modName);
+            return json;
         }
 
-        private async Task<string> GetJsonFromWeb(string url)
+        private static async Task<string> GetJsonFromWeb(string url)
         {
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
@@ -43,12 +45,12 @@ namespace MinecraftModManager.Mods
             }
         }
 
-        private string GetModInfoURL(string modName)
+        private static string GetModInfoURL(string modName)
         {
             return "https://addons-ecs.forgesvc.net/api/v2/addon/search?gameId=432&index=0&sectionId=6&sort=0&pageSize=1&searchFilter=" + modName;
         }
 
-        private string GetModInfoURLFromID(int projectID)
+        private static string GetModInfoURLFromID(int projectID)
         {
             return "https://addons-ecs.forgesvc.net/api/v2/addon/" + projectID;
         }
@@ -64,15 +66,36 @@ namespace MinecraftModManager.Mods
             _projectIdMap = JsonConvert.DeserializeObject<Dictionary<string, int>>(projectIdJson);
         }
 
-        public static void AddExplicitProjectId(string modName, int id)
+        public static int GetExplicitProjectId(string modName)
         {
-            _projectIdMap.Add(modName, id);
+            if (_projectIdMap.TryGetValue(modName, out int id))
+                return id;
+            return 0;
+        }
+
+        public static void SetExplicitProjectId(string modName, int id)
+        {
+            if (id <= 0)
+            {
+                _projectIdMap.Remove(modName);
+                return;
+            }
+            _projectIdMap[modName] = id;
         }
 
         public static void SaveProjectIdMap()
         {
             Settings.Default.ProjectIDMap = JsonConvert.SerializeObject(_projectIdMap);
             Settings.Default.Save();
+        }
+
+        private static async Task<string> GetJsonFromFile(string modName)
+        {
+            string path = @"../../../dummyJson/" + modName.Replace(" ", "_").Replace(":", "-") + ".json";
+            using (var reader = File.OpenText(path))
+            {
+                return await reader.ReadToEndAsync();
+            }
         }
     }
 }

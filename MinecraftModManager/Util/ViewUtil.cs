@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MinecraftModManager.View;
+using MinecraftModManager.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,10 +14,19 @@ namespace MinecraftModManager.Util
         public static void ShowWindow(object viewModel)
         {
             Window wnd = new Window();
-            wnd.Width = 800;
-            wnd.Height = 450;
+            wnd.SizeToContent = SizeToContent.Width;
             wnd.Content = viewModel;
             wnd.Show();
+        }
+
+        public static string ShowInputDialog(string message, string defaultValue = "")
+        {
+            InputDialog dialog = new InputDialog();
+            dialog.MessageTbx.Text = message;
+            dialog.InputTbx.Text = defaultValue;
+            if (dialog.ShowDialog() == true)
+                return dialog.InputTbx.Text;
+            return "";
         }
     }
 }

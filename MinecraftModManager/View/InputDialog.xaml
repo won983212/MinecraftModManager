@@ -1,0 +1,22 @@
+﻿<Window x:Class="MinecraftModManager.View.InputDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MinecraftModManager.View"
+             mc:Ignorable="d" 
+             Style="{StaticResource DefaultWindowStyle}"
+             MaxWidth="700"
+             SizeToContent="WidthAndHeight">
+    <DockPanel Margin="24">
+        <TextBlock x:Name="MessageTbx" DockPanel.Dock="Top" 
+                   Margin="0,0,0,16" FontSize="12pt" TextWrapping="Wrap"/>
+        <StackPanel DockPanel.Dock="Bottom"
+                    Margin="0,16,0,0"
+                    Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="0,0,8,0" Click="OK_Click">확인</Button>
+            <Button Style="{StaticResource MaterialDesignFlatButton}" Click="Cancel_Click">취소</Button>
+        </StackPanel>
+        <TextBox x:Name="InputTbx" MinWidth="300"/>
+    </DockPanel>
+</Window>

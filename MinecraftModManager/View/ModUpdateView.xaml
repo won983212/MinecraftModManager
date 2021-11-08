@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              FontFamily="{StaticResource PrimaryFont}"
              Foreground="{StaticResource TextColor}"
-             MinWidth="800" MinHeight="450">
+             MinWidth="700" MinHeight="400">
     <Grid>
         <DockPanel>
             <StackPanel DockPanel.Dock="Bottom"
@@ -16,7 +16,14 @@
                 <Button Command="{Binding UpgradeModCommand}">업그레이드</Button>
             </StackPanel>
             <Border BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Margin="8">
-                <DataGrid ItemsSource="{Binding ModVersionInfos}" AutoGenerateColumns="False" CanUserAddRows="False">
+                <DataGrid ItemsSource="{Binding ModVersionInfos}" AutoGenerateColumns="False" 
+                          CanUserAddRows="False" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}">
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="다시 로드하기" Command="{Binding RefreshModCommand}" />
+                            <MenuItem Header="수동으로 Project ID 입력" Command="{Binding SetProjectIDCommand}" />
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
                     <DataGrid.Columns>
                         <DataGridCheckBoxColumn Header="업그레이드" Binding="{Binding IsUpgrade}" />
                         <DataGridTextColumn Header="모드 이름" Binding="{Binding ModName}" IsReadOnly="True" />
