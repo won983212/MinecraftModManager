@@ -25,7 +25,7 @@ namespace MinecraftModManager.ViewModel
         public ICommand ListUpdateCommand => new RelayCommand(() => UpdateModVersionListAsync(_mods));
         public ICommand UpgradeModCommand => new RelayCommand(() => UpgradeSelectedMod(ModVersionInfos));
         public ICommand RefreshModCommand => new RelayCommand(() => RefreshModVersionInfo(SelectedItem));
-        public ICommand SetProjectIDCommand => new RelayCommand(() => SetProjectID(SelectedItem));
+        public ICommand SetProjectIDCommand => new RelayCommand(() => { SetProjectID(SelectedItem); RefreshModVersionInfo(SelectedItem); });
 
         public string LoadingTitle
         {

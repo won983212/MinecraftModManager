@@ -34,7 +34,7 @@ namespace MinecraftModManager.ViewModel
             if (IsLoadingModList)
                 return;
             IsLoadingModList = true;
-            string modsPath = Settings.Default.ModsDirectory;
+            string modsPath = ProjectProperties.Get<string>(PropertyKeys.ModsDirectory);
             if (!Directory.Exists(modsPath))
                 modsPath = ChangeModsFolder();
             if (string.IsNullOrWhiteSpace(modsPath))
@@ -49,8 +49,8 @@ namespace MinecraftModManager.ViewModel
             string modsPath = FileSystemUtil.SelectDirectory("mods폴더 지정");
             if (modsPath == null)
                 return "";
-            Settings.Default.ModsDirectory = modsPath;
-            Settings.Default.Save();
+            ProjectProperties.Set(PropertyKeys.ModsDirectory, modsPath);
+            ProjectProperties.Save();
             return modsPath;
         }
 

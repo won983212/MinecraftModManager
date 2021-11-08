@@ -81,6 +81,7 @@
     <Compile Include="Mods\CurseForgeProjectInfoRetriever.cs" />
     <Compile Include="Mods\ModUpdater.cs" />
     <Compile Include="Mods\ModVersionRetriever.cs" />
+    <Compile Include="ProjectProperties.cs" />
     <Compile Include="Util\ViewUtil.cs" />
     <Compile Include="ViewModel\ModUpdateViewModel.cs" />
     <Page Include="Theme\Theme.Light.xaml">
@@ -136,11 +137,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -149,10 +145,6 @@
       <Link>.editorconfig</Link>
     </None>
     <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

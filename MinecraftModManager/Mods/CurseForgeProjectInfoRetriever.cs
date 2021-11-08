@@ -56,7 +56,7 @@ namespace MinecraftModManager.Mods
 
         private static void LoadProjectIdMap()
         {
-            string projectIdJson = Settings.Default.ProjectIDMap;
+            string projectIdJson = ProjectProperties.Get<string>(PropertyKeys.ProjectIDMap);
             if (string.IsNullOrWhiteSpace(projectIdJson))
             {
                 _projectIdMap = new Dictionary<string, int>();
@@ -84,8 +84,8 @@ namespace MinecraftModManager.Mods
 
         public static void SaveProjectIdMap()
         {
-            Settings.Default.ProjectIDMap = JsonConvert.SerializeObject(_projectIdMap);
-            Settings.Default.Save();
+            ProjectProperties.Set(PropertyKeys.ProjectIDMap, JsonConvert.SerializeObject(_projectIdMap));
+            ProjectProperties.Save();
         }
 
         private static async Task<string> GetJsonFromFile(string modName)
