@@ -23,7 +23,6 @@ namespace MinecraftModManager.Mods
             if (_projectIdMap.TryGetValue(modName, out int id))
                 url = GetModInfoURLFromID(id);
             string json = await GetJsonFromWeb(url);
-            // string json = await GetJsonFromFile(modName);
             return json;
         }
 

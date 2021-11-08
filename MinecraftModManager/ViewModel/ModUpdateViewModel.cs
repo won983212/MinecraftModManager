@@ -16,14 +16,22 @@ namespace MinecraftModManager.ViewModel
     {
         private readonly IEnumerable<Mod> _mods;
         private readonly ModVersionRetriever _versionRetriever = new ModVersionRetriever();
+        private readonly ModUpdater _modUpdater = new ModUpdater();
+        private string _loadingTitle = "";
         private string _loadingStatus = null;
 
         public ModVersionInfo SelectedItem { get; set; }
         public ObservableCollection<ModVersionInfo> ModVersionInfos { get; } = new ObservableCollection<ModVersionInfo>();
         public ICommand ListUpdateCommand => new RelayCommand(() => UpdateModVersionListAsync(_mods));
-        public ICommand UpgradeModCommand => new RelayCommand(() => Console.WriteLine("UPDATE!!!!")); // TODO Upgrade all mods
+        public ICommand UpgradeModCommand => new RelayCommand(() => UpgradeSelectedMod(ModVersionInfos));
         public ICommand RefreshModCommand => new RelayCommand(() => RefreshModVersionInfo(SelectedItem));
         public ICommand SetProjectIDCommand => new RelayCommand(() => SetProjectID(SelectedItem));
+
+        public string LoadingTitle
+        {
+            get => _loadingTitle;
+            set => SetPropertyAndNotify(ref _loadingTitle, value);
+        }
 
         public string LoadingStatus
         {
@@ -33,18 +41,18 @@ namespace MinecraftModManager.ViewModel
 
         public ModUpdateViewModel(IEnumerable<Mod> mods)
         {
+            if (mods == null)
+                throw new InvalidOperationException("mods는 null이 될 수 없습니다.");
+
             _mods = mods;
             UpdateModVersionListAsync(mods);
         }
 
         private async Task UpdateModVersionListAsync(IEnumerable<Mod> mods)
         {
-            if (mods == null)
-                return;
-
             int count = 0;
             List<ModVersionInfo> modInfos = new List<ModVersionInfo>();
-            LoadingStatus = "";
+            LoadingTitle = "최신 버전 정보를 불러오고 있습니다..";
             foreach (Mod mod in mods)
             {
                 count++;
@@ -53,6 +61,21 @@ namespace MinecraftModManager.ViewModel
                 modInfos.Add(ent);
             }
             SetToModVersionInfo(modInfos);
+            LoadingStatus = null;
+        }
+
+        private async Task UpgradeSelectedMod(IEnumerable<ModVersionInfo> mods)
+        {
+            int count = 0;
+            LoadingTitle = "선택된 모드들을 업그레이드 하고 있습니다..";
+            mods = mods.Where((mod) => mod.IsUpgrade);
+            foreach (ModVersionInfo mod in mods)
+            {
+                count++;
+                LoadingStatus = mod.ModObj.Name + " 업그레이드 중... (" + count + "/" + mods.Count() + ")";
+                await _modUpdater.UpgradeMod(mod);
+                mod.IsUpgrade = false;
+            }
             LoadingStatus = null;
         }
 
@@ -67,7 +90,7 @@ namespace MinecraftModManager.ViewModel
 
         private async Task RefreshModVersionInfo(ModVersionInfo modVersionInfo)
         {
-            LoadingStatus = modVersionInfo.ModName + " 버전 정보 불러오는 중...";
+            LoadingStatus = modVersionInfo.ModObj.Name + " 버전 정보 불러오는 중...";
             ModVersionInfo ent = await _versionRetriever.GetModVersionInfoAsync(modVersionInfo);
             modVersionInfo.CopyCurseForgeDataFrom(ent);
             LoadingStatus = null;
@@ -76,19 +99,19 @@ namespace MinecraftModManager.ViewModel
         private void SetProjectID(ModVersionInfo modVersionInfo)
         {
             int id = GetProjectID(modVersionInfo);
-            string result = ViewUtil.ShowInputDialog(modVersionInfo.ModName + "의 Project ID를 입력해주세요. (0 입력시 기본값으로)", id.ToString());
+            string result = ViewUtil.ShowInputDialog(modVersionInfo.ModObj.Name + "의 Project ID를 입력해주세요. (0 입력시 기본값으로)", id.ToString());
             if (!string.IsNullOrWhiteSpace(result))
             {
                 if (int.TryParse(result, out int result_id))
                     id = result_id;
             }
-            CurseForgeProjectInfoRetriever.SetExplicitProjectId(modVersionInfo.ModName, id);
+            CurseForgeProjectInfoRetriever.SetExplicitProjectId(modVersionInfo.ModObj.Name, id);
             CurseForgeProjectInfoRetriever.SaveProjectIdMap();
         }
 
         private int GetProjectID(ModVersionInfo modVersionInfo)
         {
-            int explicitId = CurseForgeProjectInfoRetriever.GetExplicitProjectId(modVersionInfo.ModName);
+            int explicitId = CurseForgeProjectInfoRetriever.GetExplicitProjectId(modVersionInfo.ModObj.Name);
             if (explicitId != 0)
                 return explicitId;
             return modVersionInfo.CurseForgeID;

@@ -17,22 +17,16 @@ namespace MinecraftModManager.Mods
         private static CurseForgeProjectInfoRetriever _infoRetriever = new CurseForgeProjectInfoRetriever();
         private string _minecraftVersion = "1.16.x"; // TODO Change 할 수 있도록 변경
 
-        public async Task<ModVersionInfo> GetModVersionInfoAsync(Mod mod)
-        {
-            return await GetModVersionInfoAsync(mod.Name, mod.Version);
-        }
-
         public async Task<ModVersionInfo> GetModVersionInfoAsync(ModVersionInfo mod)
         {
-            return await GetModVersionInfoAsync(mod.ModName, mod.ModVersion);
+            return await GetModVersionInfoAsync(mod.ModObj);
         }
 
-        private async Task<ModVersionInfo> GetModVersionInfoAsync(string modName, string modVersion)
+        public async Task<ModVersionInfo> GetModVersionInfoAsync(Mod mod)
         {
-            Logger.Debug("Load info " + modName);
-            ModVersionInfo modInfo = await FillInfoFromCurseForge(modName);
-            modInfo.ModName = modName;
-            modInfo.ModVersion = modVersion;
+            Logger.Debug("Load info " + mod.Name);
+            ModVersionInfo modInfo = await FillInfoFromCurseForge(mod.Name);
+            modInfo.ModObj = mod;
             return modInfo;
         }
 

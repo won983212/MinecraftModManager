@@ -10,22 +10,57 @@ namespace MinecraftModManager.Model
 {
     public class ModVersionInfo : INotifyPropertyChanged
     {
-        public bool IsUpgrade { get; set; } = false;
+        private bool _isUpgrade = false;
+        private Mod _mod;
+        private int _curseForgeId = 0;
+        private int _curseForgeFileId = 0;
+        private string _curseForgeURL = "";
+        private string _loadError = "";
+        private string _latestVersion = "";
 
-        public string ModName { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public string ModVersion { get; set; }
+        public bool IsUpgrade
+        {
+            get => _isUpgrade;
+            set => SetPropertyAndNotify(ref _isUpgrade, value);
+        }
 
-        public int CurseForgeID { get; set; }
+        public Mod ModObj
+        {
+            get => _mod;
+            set => SetPropertyAndNotify(ref _mod, value);
+        }
 
-        public int CurseForgeFileID { get; set; }
+        public int CurseForgeID
+        {
+            get => _curseForgeId;
+            set => SetPropertyAndNotify(ref _curseForgeId, value);
+        }
 
-        public string CurseForgeURL { get; set; }
+        public int CurseForgeFileID
+        {
+            get => _curseForgeFileId;
+            set => SetPropertyAndNotify(ref _curseForgeFileId, value);
+        }
 
-        public string LoadError { get; set; }
+        public string CurseForgeURL
+        {
+            get => _curseForgeURL;
+            set => SetPropertyAndNotify(ref _curseForgeURL, value);
+        }
 
-        public string LatestVersion { get; set; }
+        public string LoadError
+        {
+            get => _loadError;
+            set => SetPropertyAndNotify(ref _loadError, value);
+        }
 
+        public string LatestVersion
+        {
+            get => _latestVersion;
+            set => SetPropertyAndNotify(ref _latestVersion, value);
+        }
 
         public void CopyCurseForgeDataFrom(ModVersionInfo src)
         {
@@ -34,20 +69,17 @@ namespace MinecraftModManager.Model
             CurseForgeURL = src.CurseForgeURL;
             LoadError = src.LoadError;
             LatestVersion = src.LatestVersion;
-
-            OnPropertyChanged(nameof(CurseForgeID));
-            OnPropertyChanged(nameof(CurseForgeFileID));
-            OnPropertyChanged(nameof(CurseForgeURL));
-            OnPropertyChanged(nameof(LoadError));
-            OnPropertyChanged(nameof(LatestVersion));
         }
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected void SetPropertyAndNotify<T>(ref T target, T value, [CallerMemberName] string propertyName = "")
+        {
+            target = value;
+            OnPropertyChanged(propertyName);
         }
     }
 }

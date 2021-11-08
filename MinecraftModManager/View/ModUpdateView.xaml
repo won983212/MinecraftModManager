@@ -26,8 +26,8 @@
                     </DataGrid.ContextMenu>
                     <DataGrid.Columns>
                         <DataGridCheckBoxColumn Header="업그레이드" Binding="{Binding IsUpgrade}" />
-                        <DataGridTextColumn Header="모드 이름" Binding="{Binding ModName}" IsReadOnly="True" />
-                        <DataGridTextColumn Header="설치된 버전" Binding="{Binding ModVersion}" IsReadOnly="True" />
+                        <DataGridTextColumn Header="모드 이름" Binding="{Binding ModObj.Name}" IsReadOnly="True" />
+                        <DataGridTextColumn Header="설치된 버전" Binding="{Binding ModObj.Version}" IsReadOnly="True" />
                         <DataGridTextColumn Header="최신 버전 파일" Binding="{Binding LatestVersion}" IsReadOnly="True" />
                         <DataGridTemplateColumn IsReadOnly="True">
                             <DataGridTemplateColumn.CellTemplate>
@@ -70,7 +70,7 @@
                 <TextBlock Grid.Column="1" Grid.Row="0"
                            Margin="0,0,0,8" FontSize="12pt"
                            Foreground="{StaticResource HeaderTextColor}"
-                           Text="최신 버전 정보를 불러오고 있습니다.." />
+                           Text="{Binding LoadingTitle}" />
                 <TextBlock Grid.Column="1" Grid.Row="1"
                            Text="{Binding LoadingStatus}" />
             </Grid>

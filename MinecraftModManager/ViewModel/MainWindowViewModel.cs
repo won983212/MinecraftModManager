@@ -15,6 +15,7 @@ namespace MinecraftModManager.ViewModel
         public ObservableCollection<Mod> Mods { get; } = new ObservableCollection<Mod>();
         public ICommand ModsRefreshCommand => new RelayCommand(() => LoadModListAsync());
         public ICommand ModsUpdateCommand => new RelayCommand(() => ViewUtil.ShowWindow(new ModUpdateViewModel(Mods)));
+        public ICommand ChangeModsFolderCommand => new RelayCommand(() => { ChangeModsFolder(); LoadModListAsync(); });
 
         private bool _isLoadingModList = false;
         public bool IsLoadingModList
@@ -35,16 +36,22 @@ namespace MinecraftModManager.ViewModel
             IsLoadingModList = true;
             string modsPath = Settings.Default.ModsDirectory;
             if (!Directory.Exists(modsPath))
-            {
-                modsPath = FileSystemUtil.SelectDirectory("mods폴더 지정");
-                if (modsPath == null)
-                    return;
-                Settings.Default.ModsDirectory = modsPath;
-                Settings.Default.Save();
-            }
+                modsPath = ChangeModsFolder();
+            if (string.IsNullOrWhiteSpace(modsPath))
+                return;
             List<Mod> mods = await Task.Run(() => GetModsInfoFromDirectory(modsPath));
             SetToModsList(mods);
             IsLoadingModList = false;
+        }
+
+        private string ChangeModsFolder()
+        {
+            string modsPath = FileSystemUtil.SelectDirectory("mods폴더 지정");
+            if (modsPath == null)
+                return "";
+            Settings.Default.ModsDirectory = modsPath;
+            Settings.Default.Save();
+            return modsPath;
         }
 
         private void SetToModsList(IEnumerable<Mod> mods)
